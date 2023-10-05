@@ -1,10 +1,13 @@
-input = "/mnt/cds"
-output = "/home/tony/mnt/itunes"
-
 import os
+import sys
 import concurrent.futures
 import shlex
 from deflacue import deflacue
+
+input = sys.argv[1]
+output = sys.argv[2]
+
+print(f"Reading flac folders from {input} and writing mp3s to {output}")
 
 def sanitize(val: str) -> str:
 	return val.replace('/', '')
@@ -75,4 +78,4 @@ for folder in sub_folders:
 #executor = concurrent.futures.ProcessPoolExecutor(10)
 #futures = [executor.submit(process_folder, folder) for folder in os.listdir(input) if os.path.isdir(os.path.join(input, folder))]
 ##futures = [executor.submit(process_folder, folder) for folder in sub_folders]
-concurrent.futures.wait(futures)
+#concurrent.futures.wait(futures)
