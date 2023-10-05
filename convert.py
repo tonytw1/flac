@@ -1,3 +1,8 @@
+# Convert flac CD images to iTunes compatible mp3 files
+#
+# Given an input folder containing folders of .flac and .flac.cue CD images,
+# split into them in single tracks and output folders of mp3 files into the output folder.
+
 import os
 import sys
 import concurrent.futures
@@ -6,7 +11,6 @@ from deflacue import deflacue
 
 input = sys.argv[1]
 output = sys.argv[2]
-
 print(f"Reading flac folders from {input} and writing mp3s to {output}")
 
 def sanitize(val: str) -> str:
