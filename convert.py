@@ -13,6 +13,8 @@ input = sys.argv[1]
 output = sys.argv[2]
 print(f"Reading flac folders from {input} and writing mp3s to {output}")
 
+tracks_processed = 0
+
 def sanitize(val: str) -> str:
 	return val.replace('/', '')
 
@@ -30,7 +32,6 @@ def process_folder(folder: str):
 
 	if (flac_file is not None) & (cue_file is not None):
 		flac_path = os.path.join(input, folder, flac_file)
-		print("*" + flac_path)
 
 		# Parse the cue file
 		parser = deflacue.CueParser.from_file(os.path.join(input, folder, cue_file))
@@ -40,7 +41,7 @@ def process_folder(folder: str):
 		tracks = cue.tracks
 		cd_title = cd_info['ALBUM']
 		cd_performer = cd_info['PERFORMER']
-		print(cd_performer + " / " + cd_title + ": " + flac_file)
+		print(f"{cd_performer} / {cd_title} : {flac_file}")
 
 		output_folder = os.path.join(output, folder)
 		if not os.path.isdir(output_folder):
@@ -48,15 +49,17 @@ def process_folder(folder: str):
 
 		len_tracks_count = len(str(len(tracks)))
 		for track in tracks:
-			num = str(track.num).rjust(len_tracks_count, '0')
+            tracks_processed = tracks_processed + 1
+            num = str(track.num).rjust(len_tracks_count, '0')
 			title = track.data['TITLE']
 			# TODO if 'PERFORMER': 'Various Artists' then split title on / to get better artist and title
 
 			track_filename = str(num) + "-" + sanitize(title) + ".mp3"
 			out_filepath = os.path.join(output_folder, track_filename)
 			track_exists = os.path.isfile(out_filepath)
-			print (out_filepath + ": " + str(track_exists))
 			if not track_exists:
+                print(f"Rendering mp3 file: {out_filepath}")
+
 				trim = "-af atrim=start_sample=" + str(track.start)
 				if (track.end > 0):
 					trim +=":end_sample=" + str(track.end)
@@ -77,6 +80,8 @@ sub_folders = [name for name in os.listdir(input) if os.path.isdir(os.path.join(
 for folder in sub_folders:
 	# Foreach folder look for a flac file
        	process_folder(folder)
+
+print(f"Finished. Processed {tracks_processed } tracks.")
 
 # Execute foreach folder in parallel
 #executor = concurrent.futures.ProcessPoolExecutor(10)
