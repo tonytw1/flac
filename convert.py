@@ -13,14 +13,14 @@ input = sys.argv[1]
 output = sys.argv[2]
 print(f"Reading flac folders from {input} and writing mp3s to {output}")
 
-tracks_processed = 0
-
 
 def sanitize(val: str) -> str:
     return val.replace('/', '')
 
 
 def process_folder(folder: str):
+    tracks_processed = 0
+
     flac_file = None
     cue_file = None
     folder_files = os.listdir(os.path.join(input, folder))
@@ -77,12 +77,15 @@ def process_folder(folder: str):
                 if result != 0:
                     exit(result)
 
+        return tracks_processed
+
 
 sub_folders = [name for name in os.listdir(input) if os.path.isdir(os.path.join(input, name))]
 
+tracks_processed = 0
 for folder in sub_folders:
     # Foreach folder look for a flac file
-    process_folder(folder)
+    tracks_processed += process_folder(folder)
 
 print(f"Finished. Processed {tracks_processed} tracks.")
 
