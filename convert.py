@@ -29,7 +29,7 @@ def process_folder(folder: str):
             flac_file = file
             # With matching cue file?
             expected_cue_file = flac_file + ".cue"
-            if (expected_cue_file in folder_files):
+            if expected_cue_file in folder_files:
                 cue_file = expected_cue_file
 
     if (flac_file is not None) & (cue_file is not None):
@@ -63,7 +63,7 @@ def process_folder(folder: str):
                 print(f"Rendering mp3 file: {out_filepath}")
 
                 trim = "-af atrim=start_sample=" + str(track.start)
-                if (track.end > 0):
+                if track.end > 0:
                     trim += ":end_sample=" + str(track.end)
                 trim += ",asetpts=N/SR/TB"
 
