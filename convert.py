@@ -77,7 +77,7 @@ def process_folder(folder: str):
                 if result != 0:
                     exit(result)
 
-        return tracks_processed
+    return tracks_processed
 
 
 sub_folders = [name for name in os.listdir(input) if os.path.isdir(os.path.join(input, name))]
